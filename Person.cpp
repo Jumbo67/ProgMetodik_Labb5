@@ -10,3 +10,11 @@ bool operator==(const Person &lhs, const Person &rhs) {
 
 Person::Person(std::string name, double age) : name(name), age(age){
 }
+
+const std::string &Person::getName() const {
+    return name;
+}
+
+double Person::getAge() const {
+    return age;
+}

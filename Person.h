@@ -9,11 +9,17 @@
 
 class Person {
     std::string name;
+
+private:
     double age;
 
 public:
     Person() = delete;
     Person(std::string name, double age);
+
+    const std::string &getName() const;
+    double getAge() const;
+
 
     friend bool operator==(const Person& lhs, const Person& rhs);
 };
