@@ -5,5 +5,5 @@
 #include "MyPrint.h"
 
 void MyPrint::operator()(Person person) {
-    std::cout << "Name: " << person.getName() << ", Age: " << person.getAge();
+    std::cout << "Name: " << person.getName() << ", Age: " << person.getAge() << "\n";
 }

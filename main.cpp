@@ -12,22 +12,23 @@ struct ageGreaterThan30 {
     }
 };
 
+struct equalNames{
+    bool operator()(const Person& lhs, const Person& rhs) {
+        return lhs.getName() == rhs.getName();
+    }
+};
+
 
 int main() {
-    std::vector<Person> persons;
-    MyPrint print;
 
-    persons.push_back({"Vincent Johansson", 22});
-    persons.push_back({"Gillian Persson", 21});
-    persons.push_back({"Andreas Perkuleel", 27});
-    persons.push_back({"Anton oskarsson", 30});
-    persons.push_back({"Pita Rolifsson", 31});
+    Person personsArray [] = {{"Vincent Johansson", 22}, {"Gillian Persson", 21}, {"Carl olofsson", 23}, {"Andreas Pettersson", 27}, {"Oskar Oskarsson", 31}};
+    std::vector<Person> persons(personsArray, personsArray + 5);
+    MyPrint print;
 
     std::cout << "For_each" << "\n";
     std::for_each(persons.begin(), persons.end(), [](Person person) {
         MyPrint print;
         print(person);
-        std::cout << "\n";
     });
 
     std::cout << "Age greater than 30" << "\n";
@@ -36,8 +37,28 @@ int main() {
     if (found != persons.end())
         print(*found);
 
+    found = std::adjacent_find(persons.begin(), persons.end(), equalNames());
+
+    std::cout << "Adjacent equal names" << "\n";
+    if (found != persons.end())
+        print(*found);
+    else
+        std::cout << "No duplicate adjacent names found" << "\n";
+
+    std::cout << "Equality part" << "\n";
+    std::cout << (std::equal(persons.begin(), persons.end(), personsArray)? "They are the same":"They are not the same");
+
+    std::cout << "\n";
 
 
+    std::cout << "Std::search part" << "\n";
+    found = std::search(persons.begin(), persons.end(), personsArray, personsArray + 2);
+
+    if (found != persons.end()) {
+        for (int i = 0; i < 2; ++i) {
+            print(*(found+i));
+        }
+    }
 
     return 0;
 }
