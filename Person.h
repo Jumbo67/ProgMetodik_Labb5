@@ -14,7 +14,7 @@ private:
     double age;
 
 public:
-    Person() = delete;
+    Person();
     Person(std::string name, double age);
 
     const std::string &getName() const;

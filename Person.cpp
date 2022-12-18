@@ -4,11 +4,17 @@
 
 #include "Person.h"
 
-bool operator==(const Person &lhs, const Person &rhs) {
-    return lhs.name == rhs.name;
+
+
+Person::Person() {
+
+}
+Person::Person(std::string name, double age) : name(name), age(age){
 }
 
-Person::Person(std::string name, double age) : name(name), age(age){
+
+bool operator==(const Person &lhs, const Person &rhs) {
+    return lhs.name == rhs.name;
 }
 
 const std::string &Person::getName() const {
@@ -18,3 +24,5 @@ const std::string &Person::getName() const {
 double Person::getAge() const {
     return age;
 }
+
+

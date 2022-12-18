@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <array>
 #include "Person.h"
 #include "MyPrint.h"
 
@@ -36,9 +37,7 @@ class MyFunc {
     double mean;
 
 public:
-    void setMean(double mean) {
-        MyFunc::mean = mean;
-    }
+    explicit MyFunc(double mean) : mean(mean) {}
     double operator()(const Person& person) {
         return person.getAge() + mean;
     }
@@ -46,29 +45,40 @@ public:
 
 int main() {
 
-    Person personsArray [] = {{"Vincent Johansson", 22}, {"Gillian Persson", 21}, {"Carl olofsson", 23}, {"Andreas Pettersson", 27}, {"Oskar Oskarsson", 31}};
-    std::vector<Person> persons_vec(personsArray, personsArray + 5);
+    srand(time(nullptr));
+
+    std::vector<std::string> names = {"Vincent Johansson", "Vincent Johansson", "Carl Olofsson", "Andreas Pettersson", "Oskar Oskarsson"};
+
+    Person personsArray [5];
+
     MyPrint print;
 
-    std::cout << "1. For_each" << "\n";
-    std::for_each(persons_vec.begin(), persons_vec.end(), [](Person person) {
-        MyPrint print;
-        print(person);
+    std::generate(std::begin(personsArray), std::end(personsArray), [&names]() {
+        std::string name = names.back();
+        names.pop_back();
+        return Person(name, rand() % 15 + 20);
     });
+
+    std::vector<Person> persons_vec(std::begin(personsArray), std::end(personsArray));
+
+    std::cout << "1. For_each" << "\n";
+    std::for_each(persons_vec.begin(), persons_vec.end(), print);
     
     std::cout << "-------------------" << "\n";
-    std::cout << "2. Age greater than 30" << "\n";
+    std::cout << "2. std::find_if age greater than 30" << "\n";
     auto found = std::find_if(persons_vec.begin(), persons_vec.end(), ageGreaterThan30());
 
     if (found != persons_vec.end())
         print(*found);
+    else
+        std::cout << "No person with age greater than 30" << "\n";
 
-    found = std::adjacent_find(persons_vec.begin(), persons_vec.end(), equalNames());
 
     std::cout << "-------------------" << "\n";
     std::cout << "3. Adjacent equal names" << "\n";
+    found = std::adjacent_find(persons_vec.begin(), persons_vec.end(), equalNames());
     if (found != persons_vec.end())
-        print(*found);
+    std::cout << found->getName() << "\n";
     else
         std::cout << "No duplicate adjacent names found" << "\n";
 
@@ -80,14 +90,14 @@ int main() {
 
     std::cout << "5. Std::search part" << "\n";
     found = std::search(persons_vec.begin(), persons_vec.end(), personsArray, personsArray + 2);
-    if (found != persons_vec.end()) {
-        for (int i = 0; i < 2; ++i) {
-            print(*found);
-        }
-    }
+    if(found != persons_vec.end())
+        std::for_each(found, found + 2, print);
+    else
+        std::cout << "Subsequence not found" << "\n";
 
     std::cout << "---------------------" << "\n";
     std::cout << "6. std::acumulate part" << "\n";
+
 
     double mean = std::accumulate(persons_vec.begin(), persons_vec.end(), 0.0, MyBinAccumulate()) / persons_vec.size();
     std::cout << "Mean: " << mean << "\n";
@@ -105,13 +115,11 @@ int main() {
 
     std::cout << "---------------------" << "\n";
     std::cout << "8. std::transform" << "\n";
-    MyFunc func;
-    func.setMean(mean);
-    std::transform(persons_vec.begin(), persons_vec.end(), v2.begin(), func);
+    std::transform(persons_vec.begin(), persons_vec.end(), v2.begin(), MyFunc(mean));
     for(double age : v2) {
         std::cout << age << ", ";
     }
-
+    std::cout << "\n";
     std::cout << "---------------------" << "\n";
     std::cout << "9. std::Sort" << "\n";
 
