@@ -39,7 +39,7 @@ class MyFunc {
 public:
     explicit MyFunc(double mean) : mean(mean) {}
     double operator()(const Person& person) {
-        return person.getAge() + mean;
+        return person.getAge() - mean;
     }
 };
 
@@ -73,10 +73,9 @@ int main() {
     else
         std::cout << "No person with age greater than 30" << "\n";
 
-
     std::cout << "-------------------" << "\n";
     std::cout << "3. Adjacent equal names" << "\n";
-    found = std::adjacent_find(persons_vec.begin(), persons_vec.end(), equalNames());
+    found = std::adjacent_find(persons_vec.begin(), persons_vec.end());
     if (found != persons_vec.end())
     std::cout << found->getName() << "\n";
     else
@@ -84,7 +83,7 @@ int main() {
 
     std::cout << "-------------------" << "\n";
     std::cout << "4. Equality part" << "\n";
-    std::cout << (std::equal(persons_vec.begin(), persons_vec.end(), personsArray) ? "They are the same\n" : "They are not the same\n");
+    std::cout << (std::equal(persons_vec.begin(), persons_vec.end(), personsArray) ? "They include the same names\n" : "They are not the same\n");
 
     std::cout << "-------------------" << "\n";
 
@@ -96,10 +95,9 @@ int main() {
         std::cout << "Subsequence not found" << "\n";
 
     std::cout << "---------------------" << "\n";
-    std::cout << "6. std::acumulate part" << "\n";
+    std::cout << "6. std::accumulate part" << "\n";
 
-
-    double mean = std::accumulate(persons_vec.begin(), persons_vec.end(), 0.0, MyBinAccumulate()) / persons_vec.size();
+    double mean = std::accumulate(persons_vec.cbegin(), persons_vec.cend(), double(), MyBinAccumulate()) / persons_vec.size();
     std::cout << "Mean: " << mean << "\n";
 
     std::cout << "---------------------" << "\n";
@@ -119,6 +117,7 @@ int main() {
     for(double age : v2) {
         std::cout << age << ", ";
     }
+
     std::cout << "\n";
     std::cout << "---------------------" << "\n";
     std::cout << "9. std::Sort" << "\n";
